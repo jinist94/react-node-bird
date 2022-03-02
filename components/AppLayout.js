@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-
+import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
-
 import { Input, Menu, Row, Col } from "antd";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 
@@ -16,7 +16,9 @@ const InfoWrapper = styled.div`
 `;
 
 const AppLayout = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  //isLoggedIn 변경 시 알아서 AppLayout컴포넌트가 리렌더링 됨
+
   return (
     <div>
       <Menu mode="horizontal">
@@ -43,11 +45,7 @@ const AppLayout = ({ children }) => {
       <Row>
         <Col xs={24} md={6}>
           <InfoWrapper>
-            {isLoggedIn ? (
-              <UserProfile setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <LoginForm setIsLoggedIn={setIsLoggedIn} />
-            )}
+            {isLoggedIn ? <UserProfile /> : <LoginForm />}
           </InfoWrapper>
         </Col>
         <Col xs={24} md={12}>
