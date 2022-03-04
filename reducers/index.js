@@ -14,8 +14,9 @@ const rootReducer = combineReducers({
       default:
         return state;
     }
-    user, post;
   },
+  user,
+  post,
 });
 
 export default rootReducer;
