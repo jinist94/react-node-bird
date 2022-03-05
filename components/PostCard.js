@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import PropsTypes from "prop-types";
-import { Avatar, Button, Card, Popover } from "antd";
+import { Avatar, Button, Card, Popover, List, Comment } from "antd";
 import {
   RetweetOutlined,
   HeartOutlined,
@@ -10,6 +10,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import PostImages from "./PostImages";
+import CommentForm from "./CommentForm";
 
 const PostCard = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id); //id가 없다면 undifined
@@ -63,7 +64,25 @@ const PostCard = ({ post }) => {
           description={post.content}
         />
       </Card>
-      {commentFormOpen && <div>댓글부분</div>}
+      {commentFormOpen && (
+        <div>
+          <CommentForm post={post} />
+          <List
+            header={`${post.Comments.length}개의 댓글`}
+            itemLayout="horizontal"
+            dataSource={post.Comments}
+            renderItem={(item) => (
+              <li>
+                <Comment
+                  author={item.User.nickname}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  content={item.content}
+                />
+              </li>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -78,7 +97,7 @@ PostCard.propsTypes = {
       nickname: PropsTypes.string,
     }),
     Images: PropsTypes.arrayOf(PropsTypes.object), //객체들의 배열
-    Comment: PropsTypes.arrayOf(PropsTypes.object), //객체들의 배열
+    Comments: PropsTypes.arrayOf(PropsTypes.object), //객체들의 배열
   }).isRequired,
 };
 

@@ -12,7 +12,7 @@ const initialState = {
         { src: "http://placeimg.com/500/500/any?t=1646262890637" },
         { src: "http://placeimg.com/500/500/any?t=1646262899837" },
       ],
-      Comment: [
+      Comments: [
         {
           User: {
             nickname: "Hay",
@@ -40,7 +40,7 @@ const dummyPost = {
     nickname: "jay",
   },
   Images: [],
-  Comment: [],
+  Comments: [],
 };
 const ADD_POST = "ADD_POST";
 
