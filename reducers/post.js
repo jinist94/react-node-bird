@@ -33,7 +33,7 @@ const initialState = {
 };
 
 const dummyPost = {
-  id: 1,
+  id: 2,
   content: "새 게시물",
   User: {
     id: 1,

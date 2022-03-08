@@ -2,15 +2,10 @@ import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import PropsTypes from "prop-types";
 import { Avatar, Button, Card, Popover, List, Comment } from "antd";
-import {
-  RetweetOutlined,
-  HeartOutlined,
-  HeartTwoTone,
-  MessageOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons";
+import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, EllipsisOutlined } from "@ant-design/icons";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
+import PostCardContent from "./PostCardContent";
 
 const PostCard = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id); //id가 없다면 undifined
@@ -30,11 +25,7 @@ const PostCard = ({ post }) => {
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (
-            <HeartTwoTone
-              twoToneColor="#eb2f96"
-              key="heart-Twotone"
-              onClick={onToggleLike}
-            />
+            <HeartTwoTone twoToneColor="#eb2f96" key="heart-Twotone" onClick={onToggleLike} />
           ) : (
             <HeartOutlined key="heart" onClick={onToggleLike} />
           ),
@@ -61,7 +52,7 @@ const PostCard = ({ post }) => {
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
           title={post.User.nickname}
-          description={post.content}
+          description={<PostCardContent postData={post.content} />}
         />
       </Card>
       {commentFormOpen && (
@@ -73,11 +64,7 @@ const PostCard = ({ post }) => {
             dataSource={post.Comments}
             renderItem={(item) => (
               <li>
-                <Comment
-                  author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-                  content={item.content}
-                />
+                <Comment author={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} content={item.content} />
               </li>
             )}
           />

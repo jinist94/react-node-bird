@@ -2,14 +2,15 @@ import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { loginAction } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
 
 const LoginForm = () => {
+  const { isLogginIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ const LoginForm = () => {
   }, []);
 
   const onSubmitForm = useCallback(() => {
-    dispatch(loginAction({ id, password }));
+    dispatch(loginRequestAction({ id, password }));
   }, [id, password]);
   return (
     <Form onFinish={onSubmitForm}>
@@ -35,15 +36,10 @@ const LoginForm = () => {
       <div>
         <label htmlFor="user-password">패스워드</label>
         <br />
-        <Input
-          name="user-password"
-          value={password}
-          onChange={onChangePassword}
-          required
-        />
+        <Input name="user-password" value={password} onChange={onChangePassword} required />
       </div>
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={isLogginIn}>
           로그인
         </Button>
         <Link href="/signup">
