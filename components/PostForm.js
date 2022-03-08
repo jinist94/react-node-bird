@@ -1,32 +1,34 @@
 import { Button, Form, Input } from "antd";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "./hooks/useInput";
-import { addPost } from "../reducers/post";
+import { addPostRequest } from "../reducers/post";
 
 const PostForm = () => {
-  const { ImagePath } = useSelector((state) => state.post);
+  const { ImagePath, addPostDone } = useSelector((state) => state.post);
   const [text, onChangeText, setText] = useInput("");
   const imageRef = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (addPostDone) setText(""); // 포스트가 정상적으로 등록되고 난 후에 초기화를 해야함
+  }, [addPostDone]);
+
   const onSubmit = useCallback(() => {
-    dispatch(addPost());
-    setText("");
-  }, []);
+    dispatch(addPostRequest(text));
+  }, [text]);
+
   const onImageUploadClick = useCallback(() => {
     imageRef.current.click();
   }, [imageRef.current]);
+
   return (
     <>
       <Form encType="multipart/form-data" onFinish={onSubmit}>
-        <Input.TextArea
-          value={text}
-          onChange={onChangeText}
-          placeholder="새 포스트 작성"
-        />
+        <Input.TextArea value={text} onChange={onChangeText} placeholder="새 포스트 작성" />
         <div>
           <input id="input-file" type="file" multiple hidden ref={imageRef} />
-          <label for="input-file">이미지업로드</label>
+          <label htmlFor="input-file">이미지업로드</label>
           <Button onClick={onImageUploadClick}>이미지 업로드</Button>
           <Button type="primary" htmlType="submit">
             짹짹

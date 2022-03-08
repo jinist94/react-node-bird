@@ -16,7 +16,7 @@ const InfoWrapper = styled.div`
 `;
 
 const AppLayout = ({ children }) => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { currentUser } = useSelector((state) => state.user);
   //isLoggedIn 변경 시 알아서 AppLayout컴포넌트가 리렌더링 됨
 
   return (
@@ -44,9 +44,7 @@ const AppLayout = ({ children }) => {
 
       <Row>
         <Col xs={24} md={6}>
-          <InfoWrapper>
-            {isLoggedIn ? <UserProfile /> : <LoginForm />}
-          </InfoWrapper>
+          <InfoWrapper>{currentUser ? <UserProfile /> : <LoginForm />}</InfoWrapper>
         </Col>
         <Col xs={24} md={12}>
           {children}

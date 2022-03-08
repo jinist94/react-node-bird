@@ -3,9 +3,12 @@ import React, { useCallback, useState } from "react";
 import AppLayout from "../components/AppLayout";
 import { Form, Input, Checkbox, Button } from "antd";
 import useInput from "../components/hooks/useInput";
+import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
-  const [id, onChangeId] = useInput("");
+  const dispatch = useDispatch();
+  const { signUpLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -32,7 +35,7 @@ const Signup = () => {
     if (!term) {
       setTermError(true);
     }
-    console.log(id, password, nickname);
+    dispatch(signupRequestAction({ email, nickname, password }));
   }, []);
   return (
     <AppLayout>
@@ -41,49 +44,32 @@ const Signup = () => {
       </Head>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">이메일</label>
           <br />
-          <Input name="user-id" value={id} onChange={onChangeId} required />
+          <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
         </div>
         <div>
-          <label htmlFor="user-id">닉네임</label>
+          <label htmlFor="user-nickname">닉네임</label>
           <br />
-          <Input
-            name="user-nickname"
-            value={nickname}
-            onChange={onChangeNickname}
-            required
-          />
+          <Input name="user-nickname" value={nickname} onChange={onChangeNickname} required />
         </div>
         <div>
           <label htmlFor="user-password">패스워드</label>
           <br />
-          <Input
-            name="user-password"
-            value={password}
-            type="password"
-            onChange={onChangePassword}
-            required
-          />
+          <Input name="user-password" value={password} type="password" onChange={onChangePassword} required />
         </div>
 
         <div>
           <label htmlFor="user-password">패스워드 확인</label>
           <br />
-          <Input
-            name="user-passwordConfirm"
-            type="password"
-            value={passwordConfirm}
-            onChange={onChangePasswordConfirm}
-            required
-          />
+          <Input name="user-passwordConfirm" type="password" value={passwordConfirm} onChange={onChangePasswordConfirm} required />
         </div>
         {passwordError && <div>비밀번호가 일치하지 않습니다.</div>}
         <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
           동의 하시나요?
         </Checkbox>
         {termError && <div>약관에 동의해주세요.</div>}
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading="signUpLoading">
           가입하기
         </Button>
       </Form>

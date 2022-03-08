@@ -1,4 +1,5 @@
 {
+  "parser": "eslint",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
@@ -11,7 +12,16 @@
     "node": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["import", "react-hooks"],
-  "rules": {}
+  "extends": ["airbnb"],
+  "plugins": ["import", "react-hooks", "jsx-a11y"],
+  "rules": {
+    "jsx-a11y/babel-has-associated-control": "off",
+    "no-underscore-dangle": "off",
+    "react/forbid-prop-types": 0,
+    "no-console": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "object-curly-newline": "off",
+    "linebreak-style": "off"
+  }
 }
