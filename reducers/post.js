@@ -42,15 +42,18 @@ const dummyPost = {
   Images: [],
   Comments: [],
 };
-const ADD_POST = "ADD_POST";
+
+export const ADD_POST_REQUEST = "ADD_POST";
+export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
+export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
 
 export const addPost = () => {
-  return { type: ADD_POST };
+  return { type: ADD_POST_REQUEST };
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_POST:
+    case ADD_POST_REQUEST:
       return {
         ...state,
         mainPosts: [dummyPost, ...state.mainPosts],
