@@ -1,3 +1,5 @@
+import shortid from "shortid";
+
 const initialState = {
   logInLoading: false, // 로그인 시도중
   logInDone: false,
@@ -32,8 +34,18 @@ export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
 export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
 export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
+export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
+export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
+
 const dummyUser = (data) => {
-  return { ...data, nickname: "jay", id: 1, Posts: [], Followings: [], Followers: [] };
+  return {
+    ...data,
+    nickname: "jay",
+    id: 1,
+    Posts: [{ id: 1 }],
+    Followings: [{ nickname: "Joy" }, { nickname: "Poy" }, { nickname: "Say" }],
+    Followers: [{ nickname: "Joy" }, { nickname: "Poy" }, { nickname: "Say" }],
+  };
 };
 
 export const loginRequestAction = (data) => {
@@ -127,6 +139,19 @@ const reducer = (state = initialState, action) => {
         ...state,
         changeNicknameLoading: false,
         changeNicknameError: action.error,
+      };
+    case ADD_POST_TO_ME:
+      return {
+        ...state,
+        currentUser: { ...state.currentUser, Posts: [{ id: action.data }, ...state.currentUser.Posts] },
+      };
+    case REMOVE_POST_OF_ME:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          Posts: [state.currentUser.Posts.filter((item) => item.id !== action.data)],
+        },
       };
     default:
       return state;

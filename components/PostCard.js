@@ -1,14 +1,17 @@
 import React, { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropsTypes from "prop-types";
 import { Avatar, Button, Card, Popover, List, Comment } from "antd";
 import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, EllipsisOutlined } from "@ant-design/icons";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
+import { REMOVE_POST_REQUEST } from "../reducers/post";
 
 const PostCard = ({ post }) => {
-  const id = useSelector((state) => state.user.me?.id); //id가 없다면 undifined
+  const id = useSelector((state) => state.user.currentUser?.id); //id가 없다면 undifined
+  const { removePostLoading } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const [commentFormOpen, setCommentFormOpen] = useState(false);
 
@@ -17,6 +20,10 @@ const PostCard = ({ post }) => {
   }, []);
   const onToggleComment = useCallback(() => {
     setCommentFormOpen((prev) => !prev);
+  }, []);
+
+  const onClickRemove = useCallback(() => {
+    dispatch({ type: REMOVE_POST_REQUEST, data: post.id });
   }, []);
   return (
     <div>
@@ -37,7 +44,9 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button>삭제</Button>
+                    <Button loading={removePostLoading} onClick={onClickRemove}>
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <Button>신고</Button>
