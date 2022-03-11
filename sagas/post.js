@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, call, delay } from "redux-saga/effects";
+import { all, fork, takeLatest, put, call, delay, throttle } from "redux-saga/effects";
 import axios from "axios";
 import shortId from "shortid";
 import {
@@ -11,9 +11,18 @@ import {
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
+  LOAD_POSTS_SUCCESS,
+  LOAD_POSTS_FAILURE,
+  generateDummyPost,
+  LOAD_POSTS_REQUEST,
 } from "../reducers/post";
 
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
+
+function loadPostsAPI(data) {
+  // 여기는 제너레이터가 아님
+  return axios.post("/api/posts", data);
+}
 
 function addPostAPI(data) {
   // 여기는 제너레이터가 아님
@@ -28,6 +37,22 @@ function removePostAPI(data) {
 function addCommentAPI(data) {
   // 여기는 제너레이터가 아님
   return axios.post("/api/comment", data);
+}
+
+function* loadPosts(action) {
+  try {
+    // const result = yield call(addPostAPI, action.data);
+    yield delay(1000);
+    yield put({
+      type: LOAD_POSTS_SUCCESS,
+      data: generateDummyPost(10),
+    });
+  } catch (error) {
+    yield put({
+      type: LOAD_POSTS_FAILURE,
+      error: error.response.data,
+    });
+  }
 }
 
 function* addPost(action) {
@@ -90,6 +115,10 @@ function* addComment(action) {
   }
 }
 
+function* watchLoadPosts() {
+  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+}
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -103,5 +132,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-  yield all([fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment)]);
+  yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment)]);
 }

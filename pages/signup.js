@@ -69,7 +69,7 @@ const Signup = () => {
           동의 하시나요?
         </Checkbox>
         {termError && <div>약관에 동의해주세요.</div>}
-        <Button type="primary" htmlType="submit" loading="signUpLoading">
+        <Button type="primary" htmlType="submit" loading={signUpLoading}>
           가입하기
         </Button>
       </Form>
