@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import PropsTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Button, Card, Popover, List, Comment } from "antd";
 import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, EllipsisOutlined } from "@ant-design/icons";
+
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
+import FollowButton from "./FollowButton";
+
 import { REMOVE_POST_REQUEST } from "../reducers/post";
 
 const PostCard = ({ post }) => {
@@ -57,6 +60,7 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        extra={id && <FollowButton post={post} />}
       >
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
