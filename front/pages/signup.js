@@ -1,13 +1,25 @@
 import Head from "next/head";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AppLayout from "../components/AppLayout";
 import { Form, Input, Checkbox, Button } from "antd";
 import useInput from "../components/hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
+import { signupRequestAction } from "../reducers/user";
+import Router from "next/router";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (signUpDone) Router.push("/"); //next이기 때문에 Router.push사용
+  }, [signUpDone]);
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError); //alert 보다는 창을 띄워주는게 좋음
+    }
+  }, [signUpError]);
+
   const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
   const [password, onChangePassword] = useInput("");
@@ -36,7 +48,7 @@ const Signup = () => {
       setTermError(true);
     }
     dispatch(signupRequestAction({ email, nickname, password }));
-  }, []);
+  }, [email, nickname, password, passwordConfirm]);
   return (
     <AppLayout>
       <Head>
@@ -68,7 +80,7 @@ const Signup = () => {
         <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
           동의 하시나요?
         </Checkbox>
-        {termError && <div>약관에 동의해주세요.</div>}
+        {termError && !term && <div>약관에 동의해주세요.</div>}
         <Button type="primary" htmlType="submit" loading={signUpLoading}>
           가입하기
         </Button>

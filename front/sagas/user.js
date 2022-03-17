@@ -1,4 +1,4 @@
-import { fork, all, put, takeLatest, delay } from "redux-saga/effects";
+import { fork, all, put, takeLatest, delay, call } from "redux-saga/effects";
 import axios from "axios";
 import {
   LOG_IN_REQUEST,
@@ -27,8 +27,8 @@ function logOutAPI() {
   return axios.post("/api/logout");
 }
 
-function signUpAPI() {
-  return axios.post("/api/signup");
+function signUpAPI(data) {
+  return axios.post("http://localhost:8080/user", data);
 }
 
 function followAPI() {
@@ -72,8 +72,8 @@ function* logOut(action) {
 
 function* signUp(action) {
   try {
-    // const result = yield call(signUpAPI);
-    yield delay(1000);
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
     yield put({
       type: SIGN_UP_SUCCESS,
       data: action.data,
