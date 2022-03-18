@@ -18,9 +18,11 @@ import {
   UNFOLLOW_FAILURE,
 } from "../reducers/user";
 
+const URL = "http://localhost:8080";
+
 function logInAPI(data) {
   // API호출은 제너레이터가 아님
-  return axios.post("/api/login", data);
+  return axios.post("/user/login", data);
 }
 
 function logOutAPI() {
@@ -28,7 +30,7 @@ function logOutAPI() {
 }
 
 function signUpAPI(data) {
-  return axios.post("http://localhost:8080/user", data);
+  return axios.post("/user", data);
 }
 
 function followAPI() {
@@ -41,11 +43,11 @@ function unfollowAPI() {
 
 function* logIn(action) {
   try {
-    // const result = yield call(logInAPI, action.data);
-    yield delay(1000);
+    const result = yield call(logInAPI, action.data);
+    console.log(result);
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (error) {
     yield put({
