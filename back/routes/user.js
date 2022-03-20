@@ -70,4 +70,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  req.logout();
+  req.session.destroy(); // 세션에 저장된 쿠키와 아이디 삭제
+  res.status(200).send("ok");
+});
+
 module.exports = router;

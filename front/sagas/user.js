@@ -26,7 +26,7 @@ function logInAPI(data) {
 }
 
 function logOutAPI() {
-  return axios.post("/user/login");
+  return axios.post("/user/logout");
 }
 
 function signUpAPI(data) {
