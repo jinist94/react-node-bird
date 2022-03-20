@@ -1,8 +1,48 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const { User } = require("../models");
+const { User, Post } = require("../models");
 // models/index.js에서 내보낸 db안의 User을 가져온다 == User의 모델(table)을 가져오는 것
+const passport = require("passport");
+const db = require("../models");
+
+router.post(
+  // POST /user/login
+  "/login",
+  (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      // err: 에러, user: 성공객체, info
+      if (err) {
+        console.log(error);
+        return next(error);
+      }
+      if (info) {
+        // client 에러
+        return res.status(401).send(info.reason);
+      }
+      return req.login(user, async (loginErr) => {
+        if (loginErr) {
+          console.log(loginErr);
+          return next(loginErr);
+        }
+        // res.setHeader('Cookie', 랜덤생성한 세션id)
+        const userData = await User.findOne({
+          where: { id: user.id },
+          attributes: {
+            exclude: ["password"], // user데이터에서 password만 빼고 가져오기
+          },
+          include: [
+            // 추가로 포함시킬 데이터, as를 사용했을 경우 as정보도 입력해주어야 한다.
+            { model: db.Post },
+            { model: db.User, as: "Followings" },
+            { model: db.User, as: "Followers" },
+          ], // Post
+        });
+        return res.status(200).json(userData);
+      });
+    })(req, res, next);
+  }
+);
 
 router.post("/", async (req, res, next) => {
   try {

@@ -3,6 +3,13 @@ const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
 const cors = require("cors");
+const passport = require("passport");
+const dotenv = require("dotenv");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const passportConfig = require("./passport");
+
+dotenv.config();
 
 db.sequelize
   .sync()
@@ -14,6 +21,8 @@ db.sequelize
 const app = express(); // express 호출
 const port = 8080;
 
+passportConfig(); // app.js에 연결
+
 app.use(
   cors({
     origin: "*",
@@ -22,6 +31,16 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET,
+  })
+);
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Hello World");

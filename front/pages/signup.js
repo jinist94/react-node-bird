@@ -9,11 +9,18 @@ import Router from "next/router";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (signUpDone) Router.push("/"); //next이기 때문에 Router.push사용
+    if (currentUser && currentUser.id) {
+      Router.replace("/");
+    }
+  }, [currentUser && currentUser.id]); //  currentUser이 있다면 redirect
+
+  useEffect(() => {
+    if (signUpDone) Router.replace("/"); //next이기 때문에 Router.push사용
   }, [signUpDone]);
+
   useEffect(() => {
     if (signUpError) {
       alert(signUpError); //alert 보다는 창을 띄워주는게 좋음
