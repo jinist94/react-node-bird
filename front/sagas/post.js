@@ -26,7 +26,7 @@ function loadPostsAPI(data) {
 
 function addPostAPI(data) {
   // 여기는 제너레이터가 아님
-  return axios.post("/api/post", data);
+  return axios.post("/post", data);
 }
 
 function removePostAPI(data) {
@@ -57,14 +57,13 @@ function* loadPosts(action) {
 
 function* addPost(action) {
   try {
-    const id = shortId.generate();
-    // const result = yield call(addPostAPI, action.data);
+    const result = yield call(addPostAPI, action.data);
     yield delay(1000);
     yield put({
       type: ADD_POST_SUCCESS,
       data: {
         id,
-        content: action.data,
+        content: result.data,
       },
     });
     yield put({

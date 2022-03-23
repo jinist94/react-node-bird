@@ -3,12 +3,14 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const { User, Post } = require("../models");
 // models/index.js에서 내보낸 db안의 User을 가져온다 == User의 모델(table)을 가져오는 것
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const passport = require("passport");
 const db = require("../models");
 
 router.post(
   // POST /user/login
   "/login",
+  isNotLoggedIn,
   (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       // err: 에러, user: 성공객체, info
@@ -44,7 +46,7 @@ router.post(
   }
 );
 
-router.post("/", async (req, res, next) => {
+router.post("/", isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       // 기존의 유저 중 해당 email을 사용하는 유저가 있는지 확인
@@ -70,7 +72,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy(); // 세션에 저장된 쿠키와 아이디 삭제
   res.status(200).send("ok");
