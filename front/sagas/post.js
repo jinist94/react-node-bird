@@ -26,7 +26,7 @@ function loadPostsAPI(data) {
 
 function addPostAPI(data) {
   // 여기는 제너레이터가 아님
-  return axios.post("/post", data);
+  return axios.post("/post", { content: data });
 }
 
 function removePostAPI(data) {
@@ -36,7 +36,7 @@ function removePostAPI(data) {
 
 function addCommentAPI(data) {
   // 여기는 제너레이터가 아님
-  return axios.post("/api/comment", data);
+  return axios.post(`/post/${data.postId}/comment`, data);
 }
 
 function* loadPosts(action) {
@@ -61,14 +61,11 @@ function* addPost(action) {
     yield delay(1000);
     yield put({
       type: ADD_POST_SUCCESS,
-      data: {
-        id,
-        content: result.data,
-      },
+      data: result.data,
     });
     yield put({
       type: ADD_POST_TO_ME,
-      data: id,
+      data: result.data.id,
     });
   } catch (error) {
     yield put({
@@ -99,12 +96,12 @@ function* removePost(action) {
 
 function* addComment(action) {
   try {
-    // const result = yield call(addCommentAPI, action.data);
-    console.log("addCommit");
+    const result = yield call(addCommentAPI, action.data);
+
     yield delay(1000);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (error) {
     yield put({

@@ -25,7 +25,8 @@ passportConfig(); // app.js에 연결
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3060",
+    credentials: true,
   })
 );
 
